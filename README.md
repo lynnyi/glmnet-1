@@ -15,3 +15,15 @@ This repository is intended to be a mirror of the source code on CRAN.  The sour
 ./configure
 R CMD INSTALL ./
 ```
+
+##Dev Enhancements
+I am developing a dev version which builds on top of glmnet.
+Currently, the dev version allows parallel cross validation and
+the use of formulas instead of user created model matrices.
+
+The dev version can be installed with
+
+```
+require(devtools)
+install_github("glmnet", "jeffwong", "dev")
+```
