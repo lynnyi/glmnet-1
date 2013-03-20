@@ -6,7 +6,7 @@ Date: 2013-3-01
 Author: Jerome Friedman, Trevor Hastie, Rob Tibshirani
 Maintainer: Trevor Hastie <hastie@stanford.edu>
 Depends: Matrix (>= 1.0-6), utils
-Suggests: survival
+Suggests: survival, foreach, doMC
 Description: Extremely efficient procedures for fitting the entire
         lasso or elastic-net regularization path for linear regression,
         logistic and multinomial regression models, poisson regression
