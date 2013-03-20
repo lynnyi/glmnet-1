@@ -4,7 +4,7 @@
 \description{Does k-fold cross-validation for glmnet, produces a plot,
   and returns a value for \code{lambda}}
 \usage{
-cv.glmnet(x, y, weights, offset, lambda, type.measure, nfolds, foldid, grouped, keep, ...)
+cv.glmnet(x, y, weights, offset, lambda, type.measure, nfolds, foldid, grouped, keep, parallel, ...)
 }
 \arguments{
   \item{x}{\code{x} matrix as in \code{glmnet}.}
@@ -49,7 +49,9 @@ cv.glmnet(x, y, weights, offset, lambda, type.measure, nfolds, foldid, grouped, 
       value of \code{lambda}. This means these fits are computed with
       this observation and the rest of its fold omitted. The
       \code{folid} vector is also returned. Default is {keep=FALSE}}
-  \item{\dots}{Other arguments that can be passed to \code{glmnet}}
+    \item{parallel}{logical. If TRUE, use parallel foreach to fit each fold.
+    Must register parallel backend, such as doMC or others.}
+    \item{\dots}{Other arguments that can be passed to \code{glmnet}}
 }
 \details{The function runs \code{glmnet} \code{nfolds}+1 times; the
   first to get the \code{lambda} sequence, and then the remainder to
