@@ -13,8 +13,19 @@ plotCoefs = function(model, nonzero = T, subset.condition, ...) {
     if (nonzero) coefs.df = droplevels(subset(coefs.df, value != 0))
     if (!missing(subset.condition)) coefs.df = droplevels(subset(coefs.df, eval(subset.condition, coefs.df)))
 
-    if (isLogistic) p = ggplot(coefs.df,aes(x = label, y = value, fill = value > 1))
-    else p = ggplot(coefs.df,aes(x = label, y = value, fill = value > 0))
+    if (isLogistic) {
+      coefs.df$value_bin = ">1"
+      coefs.df$value_bin[which(coefs.df$value == 1)] = "=1"
+      coefs.df$value_bin[which(coefs.df$value < 1)] = "<1"
+      coefs.df$value_bin = factor(coefs.df$value_bin, levels = c("<1", "=1", ">1"))
+    } else {
+      coefs.df$value_bin = ">0"
+      coefs.df$value_bin[which(coefs.df$value == 0)] = "=0"
+      coefs.df$value_bin[which(coefs.df$value < 0)] = "<0"
+      coefs.df$value_bin = factor(coefs.df$value_bin, levels = c("<0", "=0", ">0"))
+    }
+
+    p = ggplot(coefs.df,aes(x = label, y = value, fill = value_bin))
     p +
       geom_bar(stat='identity') +
       coord_flip() +
@@ -27,9 +38,11 @@ plotFactorCoefs = function(model, variable, ...) {
     variable.ch = deparse(substitute(variable))
     coefs = coef(model)[,1]
     coef.labels = attr(coefs, "names")
-    variable.indices = grep(paste(variable.ch, ".*", sep=""), coef.labels)
+    variable.levels = levels(eval(substitute(variable), model$data))
+    #variable.indices = grep(paste("^",variable.ch, ".*", sep=""), coef.labels)
+    variable.indices = which(coef.labels %in% paste(variable.ch, variable.levels, sep=""))
 
-    base = paste(variable.ch, levels(eval(substitute(variable), model$data))[1], sep="")
+    base = paste(variable.ch, variable.levels[1], sep="")
     labels = c(coef.labels[variable.indices], base)
     values = c(coefs[variable.indices], 0)
     isLogistic = model$name == "Binomial Deviance"
@@ -39,8 +52,19 @@ plotFactorCoefs = function(model, variable, ...) {
     coefs.df[1:(n-1),] = coefs.df[1:(n-1),][order(coefs.df$value[1:(n-1)], coefs.df$label[1:(n-1)]),]
     coefs.df$label = factor(coefs.df$label, levels = coefs.df$label)
 
-    if (isLogistic) p = ggplot(coefs.df,aes(x = label, y = value, fill = value > 1))
-    else p = ggplot(coefs.df,aes(x = label, y = value, fill = value > 0))
+    if (isLogistic) {
+      coefs.df$value_bin = ">1"
+      coefs.df$value_bin[which(coefs.df$value == 1)] = "=1"
+      coefs.df$value_bin[which(coefs.df$value < 1)] = "<1"
+      coefs.df$value_bin = factor(coefs.df$value_bin, levels = c("<1", "=1", ">1"))
+    } else {
+      coefs.df$value_bin = ">0"
+      coefs.df$value_bin[which(coefs.df$value == 0)] = "=0"
+      coefs.df$value_bin[which(coefs.df$value < 0)] = "<0"
+      coefs.df$value_bin = factor(coefs.df$value_bin, levels = c("<0", "=0", ">0"))
+    }
+
+    p = ggplot(coefs.df,aes(x = label, y = value, fill = value_bin))
     p +
       geom_bar(stat='identity') +
       coord_flip() +

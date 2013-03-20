@@ -1,7 +1,11 @@
 cv.glmnet2 = function(formula, data, scale=T, ...) {
     x = model.matrix(formula,data)
     if (scale) x = scale(x)
-    y = unlist(ifelse ("data.table" %in% class(data), (c(data[,all.vars(formula)[1],with=F])), data[,all.vars(formula)[1]]))
+    if ("data.table" %in% class(data)) {
+      y = unlist(c(data[,all.vars(formula)[1],with=F]))
+    } else {
+      y = data[,all.vars(formula)[1]]
+    }
     if (attr(terms(formula), "intercept") == 0) cv = cv.glmnet(x,y,...)
     else cv = cv.glmnet(x[,-1],y,...)
     cv$formula = formula
