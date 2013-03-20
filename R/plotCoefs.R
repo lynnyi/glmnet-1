@@ -11,10 +11,11 @@ plotCoefs = function(model, nonzero = T, subset.condition, ...) {
 
     coefs.df = subset(coefs.df, label != "(Intercept)")
     if (nonzero) coefs.df = droplevels(subset(coefs.df, value != 0))
-    if (!missing(subset.condition)) coefs.df = droplevels(subset(coefs.df, subset.condition))
+    if (!missing(subset.condition)) coefs.df = droplevels(subset(coefs.df, eval(subset.condition, coefs.df)))
 
-    ggplot(coefs.df,
-           aes(x = label, y = value, fill = value > 0)) +
+    if (isLogistic) p = ggplot(coefs.df,aes(x = label, y = value, fill = value > 1))
+    else p = ggplot(coefs.df,aes(x = label, y = value, fill = value > 0))
+    p +
       geom_bar(stat='identity') +
       coord_flip() +
       theme_grey(base_size = 25) + 
@@ -29,16 +30,18 @@ plotFactorCoefs = function(model, variable, ...) {
     variable.indices = grep(paste(variable.ch, ".*", sep=""), coef.labels)
 
     base = paste(variable.ch, levels(eval(substitute(variable), model$data))[1], sep="")
-    labels = c(base, coef.labels[variable.indices])
-    values = c(0, coefs[variable.indices])
+    labels = c(coef.labels[variable.indices], base)
+    values = c(coefs[variable.indices], 0)
     isLogistic = model$name == "Binomial Deviance"
     if (isLogistic) values = exp(values)
     coefs.df = data.frame(label = labels, value = values)
-    coefs.df = coefs.df[order(coefs.df$value),]
+    n = nrow(coefs.df)
+    coefs.df[1:(n-1),] = coefs.df[1:(n-1),][order(coefs.df$value[1:(n-1)], coefs.df$label[1:(n-1)]),]
     coefs.df$label = factor(coefs.df$label, levels = coefs.df$label)
 
-    ggplot(coefs.df,
-           aes(x = label, y = value, fill = value > 0)) +
+    if (isLogistic) p = ggplot(coefs.df,aes(x = label, y = value, fill = value > 1))
+    else p = ggplot(coefs.df,aes(x = label, y = value, fill = value > 0))
+    p +
       geom_bar(stat='identity') +
       coord_flip() +
       theme_grey(base_size = 25) + 
