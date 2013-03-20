@@ -1,3 +1,14 @@
+cv.glmnet2 = function(formula, data, ...) {
+    x = model.matrix(formula,data)
+    y = data[,all.vars(formula)[1]]
+    if (attr(terms(f), "intercept") == 0) cv = cv.glmnet(x,y,...)
+    else cv = cv.glmnet(x[,-1],y,...)
+    cv$formula = formula
+    cv$data = data
+    class(cv) = c("cv.glmnet", "cv.glmnet2")
+    return (cv)
+}
+
 cv.glmnet=function(x,y,weights,offset=NULL,lambda=NULL,type.measure=c("mse","deviance","class","auc","mae"),nfolds=10,foldid,grouped=TRUE,keep=FALSE,parallel=F,...){
   if(missing(type.measure))type.measure="default"
   else type.measure=match.arg(type.measure)
@@ -52,8 +63,8 @@ cv.glmnet=function(x,y,weights,offset=NULL,lambda=NULL,type.measure=c("mse","dev
   cvsd=cvstuff$cvsd
   cvname=cvstuff$name
   
-out=list(lambda=lambda,cvm=cvm,cvsd=cvsd,cvup=cvm+cvsd,cvlo=cvm-cvsd,nzero=nz,name=cvname,glmnet.fit=glmnet.object)
-if(keep)out=c(out,list(fit.preval=cvstuff$fit.preval,foldid=foldid))
+  out=list(lambda=lambda,cvm=cvm,cvsd=cvsd,cvup=cvm+cvsd,cvlo=cvm-cvsd,nzero=nz,name=cvname,glmnet.fit=glmnet.object)
+  if(keep)out=c(out,list(fit.preval=cvstuff$fit.preval,foldid=foldid))
   lamin=if(type.measure=="auc")getmin(lambda,-cvm,cvsd)
   else getmin(lambda,cvm,cvsd)
   obj=c(out,as.list(lamin))
