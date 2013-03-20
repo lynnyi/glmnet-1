@@ -4,11 +4,12 @@
 \description{Does k-fold cross-validation for glmnet, produces a plot,
   and returns a value for \code{lambda}}
 \usage{
-cv.glmnet2(formula, data, ...)
+cv.glmnet2(formula, data, scale, ...)
 }
 \arguments{
   \item{formula}{formula expression specifying the response variable and features}
   \item{data}{a dataframe containing the response and feature variables}
+  \item{scale}{scale the model matrix before giving it to cv.glmnet}
   \item{\dots}{Other arguments that can be passed to \code{cv.glmnet}}
 }
 \details{A wrapper around cv.glmnet that allows the user to use formulas instead of

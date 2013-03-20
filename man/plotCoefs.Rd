@@ -5,11 +5,14 @@
     Uses ggplot2 to plot coefficients as a bar graph
 }
 \usage{
-plotCoefs(model, nonzero, ...)
+plotCoefs(model, nonzero, subset.condition, ...)
 }
 \arguments{
   \item{model}{fitted \code{"cv.glmnet2"} model}
   \item{term}{logical.  If TRUE, only plot nonzero coefficients}
+  \item{subset.condition}{an expression as in \code{expression} which can be passed
+    into the function \code{subset}.  The expression should be a function of the
+    variables "label" and "value"}
   \item{\dots}{Currently not used}
 }
 \details{
