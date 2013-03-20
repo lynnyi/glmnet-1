@@ -1,0 +1,5 @@
+config.log
+config.status
+src/Makevars
+src/glmnet.so
+src/glmnet3.o
