@@ -8,3 +8,10 @@ and multinomial regression models, poisson regression and the Cox model. Two rec
 and the grouped multinomial. The algorithm uses cyclical coordinate descent in a pathwise fashion, as described in the paper listed below.
 
 This repository is intended to be a mirror of the source code on CRAN.  The source code was last pulled on 2013-03-19
+
+##Installation
+
+```
+./configure
+R CMD INSTALL ./
+```
