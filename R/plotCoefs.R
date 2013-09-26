@@ -10,7 +10,7 @@ plotCoefs = function(model, nonzero = T, subset.condition, ...) {
     coefs.df$label = factor(coefs.df$label, levels = coefs.df$label)
 
     coefs.df = subset(coefs.df, label != "(Intercept)")
-    if (nonzero) coefs.df = droplevels(subset(coefs.df, value != 0))
+    if (nonzero) coefs.df = droplevels(subset(coefs.df, value != ifelse(isLogistic, 1, 0)))
     if (!missing(subset.condition)) coefs.df = droplevels(subset(coefs.df, eval(subset.condition, coefs.df)))
 
     if (isLogistic) {
