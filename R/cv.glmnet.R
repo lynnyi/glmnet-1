@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 cv.glmnet2 = function(formula, data, scale=T, ...) {
     x = model.matrix(formula,data)
     if (scale) x = scale(x)
@@ -17,7 +18,7 @@ cv.glmnet2 = function(formula, data, scale=T, ...) {
     return (cv)
 }
 
-cv.glmnet=function(x,y,weights,offset=NULL,lambda=NULL,type.measure=c("mse","deviance","class","auc","mae"),nfolds=10,foldid,grouped=TRUE,keep=FALSE,parallel=F,...){
+cv.glmnet=function(x,y,weights,offset=NULL,lambda=NULL,type.measure=c("mse","deviance","class","auc","mae"),nfolds=10,foldid,grouped=TRUE,keep=FALSE,parallel=FALSE,...){
   if(missing(type.measure))type.measure="default"
   else type.measure=match.arg(type.measure)
   if(!is.null(lambda)&&length(lambda)<2)stop("Need more than one value of lambda for cv.glmnet")
@@ -47,6 +48,7 @@ cv.glmnet=function(x,y,weights,offset=NULL,lambda=NULL,type.measure=c("mse","dev
   if(nfolds<3)stop("nfolds must be bigger than 3; nfolds=10 recommended")
    outlist=as.list(seq(nfolds))
 ###Now fit the nfold models and store them
+###First try and do it using foreach if parallel is TRUE
   if (parallel & require(foreach)) {
     outlist = foreach (i=seq(nfolds), .packages=c("glmnet")) %dopar% {
       which=foldid==i
