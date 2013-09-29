@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 cv.glmnet2 = function(formula, data, scale=T, ...) {
     x = model.matrix(formula,data)
     if (scale) x = scale(x)
