@@ -17,8 +17,14 @@ glmnet=function(x,y,family=c("gaussian","binomial","poisson","multinomial","cox"
   y=drop(y) # we dont like matrix responses unless we need them
   np=dim(x)
    ###check dims
-  if(is.null(np)|(np[2]<=1))stop("x should be a matrix with 2 or more columns")
- nobs=as.integer(np[1])
+  if(is.null(np)){
+    nobs = length(x)
+    nvars = as.integer(1)
+  }
+  else {
+    nobs = as.integer(np[1])
+    nvars = as.integer(np[2])
+  }
   if(missing(weights))weights=rep(1,nobs)
   else if(length(weights)!=nobs)stop(paste("number of elements in weights (",length(weights),") not equal to the number of rows of x (",nobs,")",sep=""))
   nvars=as.integer(np[2])
